@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meadow Shore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design System ── */
+    :root {
+      --ivory:      #F3EFE6;
+      --ivory-dark: #E8E2D7;
+      --olive:      #6F7B52;
+      --terracotta: #C96A4A;
+      --brown:      #4A3B2F;
+      --brown-mid:  #7A6355;
+      --brown-light:#B8A898;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'Jost', system-ui, sans-serif;
+      --ease: 0.35s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--ivory);
+      color: var(--brown);
+      line-height: 1.7;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+    h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; line-height: 1.15; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Button */
+    .btn {
+      display: inline-block; padding: 13px 36px;
+      font-family: var(--font-sans); font-size: 11px; font-weight: 400;
+      letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer;
+      border: 1px solid var(--brown); color: var(--brown); background: transparent;
+      transition: background-color var(--ease), color var(--ease);
+    }
+    .btn:hover { background: var(--brown); color: var(--ivory); }
+    .btn--light { border-color: rgba(243,239,230,.55); color: var(--ivory); }
+    .btn--light:hover { background: rgba(243,239,230,.12); border-color: var(--ivory); }
+
+    .eyebrow {
+      display: block; font-size: 10.5px; font-weight: 400;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 14px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 22px 0;
+      transition: background-color .45s ease, padding .45s ease, box-shadow .45s ease;
+    }
+    .header.scrolled {
+      background: rgba(243,239,230,.94); backdrop-filter: blur(14px);
+      padding: 14px 0; box-shadow: 0 1px 24px rgba(74,59,47,.07);
+    }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; }
+    .header__logo-img { height: 52px; object-fit: contain; }
+    .header__email {
+      font-size: 12.5px; color: var(--brown-mid); letter-spacing: .04em;
+      transition: color var(--ease);
+    }
+    .header__email:hover { color: var(--brown); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center;
+      position: relative; overflow: hidden;
+      background: linear-gradient(160deg,
+        #1a2416 0%, #2c3a22 22%, #3b4829 45%, #4A3B2F 68%, #6b5040 100%);
+      padding: 120px 48px 100px;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 80%, rgba(111,123,82,.18) 0%, transparent 100%);
+    }
+    .hero__content { position: relative; z-index: 1; max-width: 680px; }
+    .hero__eyebrow { font-size: 10.5px; letter-spacing: .35em; text-transform: uppercase; color: rgba(243,239,230,.5); margin-bottom: 28px; }
+    .hero__title {
+      font-family: var(--font-serif); font-size: clamp(60px, 11vw, 112px);
+      font-weight: 300; color: var(--ivory); line-height: 1; letter-spacing: .05em; margin-bottom: 28px;
+    }
+    .hero__tagline { font-size: 14px; color: rgba(243,239,230,.72); letter-spacing: .14em; margin-bottom: 52px; }
+    .hero__scroll {
+      position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      color: rgba(243,239,230,.35); font-size: 9.5px; letter-spacing: .25em; text-transform: uppercase;
+    }
+    .hero__scroll-line {
+      width: 1px; height: 44px;
+      background: linear-gradient(to bottom, rgba(243,239,230,0), rgba(243,239,230,.4));
+      animation: lineGrow 2.2s ease-in-out infinite; transform-origin: top;
+    }
+    @keyframes lineGrow {
+      0%   { transform: scaleY(0); opacity: 0; }
+      40%  { transform: scaleY(1); opacity: 1; }
+      100% { transform: scaleY(1); opacity: 0; }
+    }
+
+    /* ── ABOUT ── */
+    .about { padding: 96px 0; background: var(--ivory); }
+    .about__inner { display: grid; grid-template-columns: 200px 1fr; gap: 80px; align-items: start; }
+    .about__label { font-size: 10.5px; letter-spacing: .3em; text-transform: uppercase; color: var(--brown-mid); padding-top: 10px; }
+    .about__title { font-size: clamp(38px,5vw,58px); color: var(--brown); margin-bottom: 32px; }
+    .about__divider { width: 56px; height: 1px; background: var(--olive); margin-bottom: 32px; }
+    .about__text { font-size: 16px; color: var(--brown-mid); line-height: 1.95; max-width: 560px; white-space: pre-line; }
+
+    /* ── COLLECTION FEATURE ── */
+    .collection-feature { padding: 96px 0; background: var(--ivory-dark); }
+    .collection-feature__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; }
+    .collection-feature__image {
+      aspect-ratio: 4/5;
+      background: linear-gradient(150deg, #1a2416 0%, #2c3a22 30%, #4A3B2F 65%, #6b5040 100%);
+      border-radius: 2px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+    }
+    .collection-feature__image-tag { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: rgba(243,239,230,.3); }
+    .collection-feature__image-hint { display: flex; gap: 12px; }
+    .collection-feature__image-hint span { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: rgba(243,239,230,.18); }
+    .cf-eyebrow { color: var(--olive); margin-bottom: 20px; }
+    .collection-feature__title { font-size: clamp(42px,5vw,68px); color: var(--brown); margin-bottom: 28px; }
+    .collection-feature__text { font-size: 15px; color: var(--brown-mid); line-height: 1.9; margin-bottom: 40px; max-width: 420px; }
+
+    /* ── GALLERY ── */
+    .gallery { padding: 96px 0; background: var(--ivory); }
+    .gallery__header { margin-bottom: 48px; }
+    .gallery__title { font-size: clamp(32px,4vw,50px); color: var(--brown); margin-top: 8px; }
+    .gallery__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+    .gallery__item { overflow: hidden; }
+    .gallery__item:nth-child(1) { grid-column: span 2; aspect-ratio: 16/7; }
+    .gallery__item:nth-child(2) { aspect-ratio: 3/4; }
+    .gallery__item:nth-child(3) { aspect-ratio: 3/4; }
+    .gallery__item:nth-child(4) { aspect-ratio: 3/4; }
+    .gallery__item:nth-child(5) { grid-column: span 2; aspect-ratio: 16/7; }
+    .gallery__cell {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      transition: transform .6s ease;
+    }
+    .gallery__item:hover .gallery__cell { transform: scale(1.04); }
+    .gallery__label { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; opacity: .45; }
+
+    /* ── PRODUCTS ── */
+    .products { padding: 96px 0; background: var(--ivory-dark); }
+    .products__header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 56px; }
+    .products__title { font-size: clamp(32px,4vw,50px); color: var(--brown); margin-top: 8px; }
+    .products__grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px 20px; }
+
+    .product-card { cursor: pointer; }
+    .product-card__image {
+      aspect-ratio: 3/4; margin-bottom: 16px; position: relative;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .product-card__tshirt { transition: transform .45s ease; }
+    .product-card:hover .product-card__tshirt { transform: scale(1.06); }
+    .product-card__overlay {
+      position: absolute; inset: 0; background: rgba(74,59,47,.06);
+      opacity: 0; transition: opacity var(--ease);
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 20px;
+    }
+    .product-card__image:hover .product-card__overlay { opacity: 1; }
+    .product-card__qv {
+      font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ivory); background: rgba(74,59,47,.75); padding: 8px 18px;
+    }
+    .product-card__collection { font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--brown-light); margin-bottom: 4px; }
+    .product-card__name { font-family: var(--font-serif); font-size: 22px; color: var(--brown); margin-bottom: 2px; }
+    .product-card__print { font-size: 13px; color: var(--brown-mid); margin-bottom: 6px; }
+    .product-card__price { font-size: 14px; color: var(--brown); }
+
+    /* ── MANIFESTO ── */
+    .manifesto { padding: 120px 0; background: var(--brown); text-align: center; }
+    .manifesto__quote {
+      font-family: var(--font-serif); font-size: clamp(28px,5vw,58px);
+      font-weight: 300; font-style: italic; color: var(--ivory);
+      line-height: 1.45; max-width: 820px; margin: 0 auto 40px;
+    }
+    .manifesto__dash { width: 40px; height: 1px; background: rgba(243,239,230,.25); margin: 0 auto 20px; }
+    .manifesto__brand { font-size: 10.5px; letter-spacing: .42em; text-transform: uppercase; color: rgba(243,239,230,.38); }
+
+    /* ── SUBSCRIBE ── */
+    .subscribe { padding: 96px 0; background: var(--ivory); }
+    .subscribe__inner { max-width: 520px; margin: 0 auto; text-align: center; }
+    .subscribe__title { font-size: clamp(28px,4vw,42px); color: var(--brown); margin-bottom: 12px; }
+    .subscribe__subtitle { font-size: 14px; color: var(--brown-mid); margin-bottom: 40px; }
+    .subscribe__form { display: flex; border: 1px solid rgba(74,59,47,.28); }
+    .subscribe__input {
+      flex: 1; padding: 14px 20px; font-family: var(--font-sans); font-size: 14px;
+      color: var(--brown); background: transparent; border: none; outline: none;
+    }
+    .subscribe__input::placeholder { color: var(--brown-light); }
+    .subscribe__btn {
+      padding: 14px 28px; font-family: var(--font-sans); font-size: 10.5px;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ivory); background: var(--brown); border: none; cursor: pointer;
+      transition: background-color var(--ease); white-space: nowrap;
+    }
+    .subscribe__btn:hover { background: var(--brown-mid); }
+    .subscribe__note { font-size: 11px; color: var(--brown-light); margin-top: 16px; }
+
+    /* ── FOOTER ── */
+    .footer { padding: 80px 0 48px; background: var(--ivory-dark); border-top: 1px solid rgba(74,59,47,.08); }
+    .footer__top { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 60px; }
+    .footer__logo { height: 88px; object-fit: contain; margin-bottom: 20px; }
+    .footer__tagline { font-size: 13px; color: var(--brown-mid); letter-spacing: .08em; }
+    .footer__divider { width: 1px; height: 44px; background: rgba(74,59,47,.15); margin: 28px auto; }
+    .footer__contacts { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .footer__contact { font-size: 14px; color: var(--brown-mid); transition: color var(--ease); }
+    .footer__contact:hover { color: var(--brown); }
+    .footer__bottom { text-align: center; padding-top: 36px; border-top: 1px solid rgba(74,59,47,.07); }
+    .footer__copy { font-size: 11px; color: var(--brown-light); }
+
+    /* Responsive */
+    @media (max-width: 1024px) { .products__grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      .about__inner { grid-template-columns: 1fr; gap: 28px; }
+      .about__label { display: none; }
+      .collection-feature__inner { grid-template-columns: 1fr; gap: 40px; }
+      .products__grid { grid-template-columns: repeat(2,1fr); gap: 16px 12px; }
+      .products__header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .gallery__grid { grid-template-columns: 1fr 1fr; }
+      .gallery__item:nth-child(1),
+      .gallery__item:nth-child(5) { grid-column: span 2; }
+      .gallery__item:nth-child(4) { grid-column: span 2; aspect-ratio: 16/7; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header" id="site-header">
+  <div class="container">
+    <div class="header__inner">
+      <a href="#hero" class="header__logo">
+        <img src="public/logo.png" alt="Meadow Shore" class="header__logo-img" />
+      </a>
+      <a href="mailto:hello@meadowshore.ru" class="header__email">hello@meadowshore.ru</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="hero__content">
+    <p class="hero__eyebrow">Forest Collection · 2026</p>
+    <h1 class="hero__title">Meadow Shore</h1>
+    <p class="hero__tagline">тихая одежда с природными иллюстрациями</p>
+    <a href="#collections" class="btn btn--light">Explore Collection</a>
+  </div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about__inner reveal">
+      <span class="about__label">О бренде</span>
+      <div>
+        <h2 class="about__title">Одежда,<br>вдохновлённая природой</h2>
+        <div class="about__divider"></div>
+        <p class="about__text">Meadow Shore — это одежда для тех, кто замечает красоту в тихих деталях. Мы создаём вещи, вдохновлённые природой: лесом, полем, утренним светом сквозь ветви.
+
+Каждая футболка — маленькая история о том, как выглядит мир, когда замедляешься.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COLLECTION FEATURE ═══ -->
+<section class="collection-feature" id="collections">
+  <div class="container">
+    <div class="collection-feature__inner">
+      <div class="collection-feature__image">
+        <span class="collection-feature__image-tag">Forest Collection</span>
+        <div class="collection-feature__image-hint">
+          <span>птица</span><span>·</span><span>хвоя</span><span>·</span><span>шишки</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <span class="eyebrow cf-eyebrow">Коллекция · 2026</span>
+        <h2 class="collection-feature__title">Forest<br>Collection</h2>
+        <p class="collection-feature__text">Первая коллекция Meadow Shore — лес как он есть. Птицы, хвоя, шишки, тишина. Принты, вдохновлённые прогулками в осеннем лесу.</p>
+        <a href="#products" class="btn">Explore Forest</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ATMOSPHERE GALLERY ═══ -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="gallery__header reveal">
+      <span class="eyebrow">Атмосфера</span>
+      <h2 class="gallery__title">Тишина леса</h2>
+    </div>
+    <div class="gallery__grid">
+      <div class="gallery__item">
+        <div class="gallery__cell" style="background:#4A3B2F">
+          <span class="gallery__label" style="color:rgba(243,239,230,.45)">Ткань крупно</span>
+        </div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__cell" style="background:#6F7B52">
+          <span class="gallery__label" style="color:rgba(243,239,230,.45)">Принт</span>
+        </div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__cell" style="background:#2c3a22">
+          <span class="gallery__label" style="color:rgba(243,239,230,.35)">Ветви</span>
+        </div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__cell" style="background:#C96A4A">
+          <span class="gallery__label" style="color:rgba(243,239,230,.45)">Лес</span>
+        </div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__cell" style="background:#DDD9CF">
+          <span class="gallery__label" style="color:rgba(74,59,47,.4)">Детали</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTS ═══ -->
+<section class="products" id="products">
+  <div class="container">
+    <div class="products__header reveal">
+      <div>
+        <span class="eyebrow">Forest Collection</span>
+        <h2 class="products__title">Все модели</h2>
+      </div>
+      <button class="btn">Все товары</button>
+    </div>
+    <div class="products__grid" id="products-grid">
+      <!-- Generated by JS below -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section class="manifesto">
+  <div class="container">
+    <div class="reveal">
+      <p class="manifesto__quote">"Красота природы — в тихих деталях."</p>
+      <div class="manifesto__dash"></div>
+      <p class="manifesto__brand">Meadow Shore</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SUBSCRIBE ═══ -->
+<section class="subscribe" id="subscribe">
+  <div class="container">
+    <div class="subscribe__inner reveal">
+      <span class="eyebrow">Рассылка</span>
+      <h2 class="subscribe__title">Узнать о новых коллекциях</h2>
+      <p class="subscribe__subtitle">Первыми узнавайте о новинках и специальных предложениях</p>
+      <form class="subscribe__form" onsubmit="handleSubscribe(event)">
+        <input type="email" class="subscribe__input" placeholder="ваш email" required />
+        <button type="submit" class="subscribe__btn">Подписаться</button>
+      </form>
+      <p class="subscribe__note">Без спама. Только новости бренда.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer" id="contacts">
+  <div class="container">
+    <div class="footer__top">
+      <img src="public/logo.png" alt="Meadow Shore" class="footer__logo" />
+      <p class="footer__tagline">тихая одежда с природными иллюстрациями</p>
+      <div class="footer__divider"></div>
+      <div class="footer__contacts">
+        <a href="mailto:hello@meadowshore.ru" class="footer__contact">hello@meadowshore.ru</a>
+        <span class="footer__contact">@meadow.shore</span>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 Meadow Shore. Все права защищены.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Product data ──
+  const products = [
+    { id:1,  name:'Birch',  color:'Ivory',      hex:'#F3EFE6', print:'Берёза'     },
+    { id:2,  name:'Spruce', color:'Olive',      hex:'#6F7B52', print:'Ель'        },
+    { id:3,  name:'Cedar',  color:'Brown',      hex:'#4A3B2F', print:'Кедр'       },
+    { id:4,  name:'Ember',  color:'Terracotta', hex:'#C96A4A', print:'Уголёк'     },
+    { id:5,  name:'Fern',   color:'Ivory',      hex:'#F3EFE6', print:'Папоротник' },
+    { id:6,  name:'Pine',   color:'Olive',      hex:'#6F7B52', print:'Сосна'      },
+    { id:7,  name:'Bark',   color:'Brown',      hex:'#4A3B2F', print:'Кора'       },
+    { id:8,  name:'Moss',   color:'Terracotta', hex:'#C96A4A', print:'Мох'        },
+    { id:9,  name:'Mist',   color:'Ivory',      hex:'#F3EFE6', print:'Туман'      },
+    { id:10, name:'Sage',   color:'Olive',      hex:'#6F7B52', print:'Шалфей'     },
+    { id:11, name:'Soil',   color:'Brown',      hex:'#4A3B2F', print:'Земля'      },
+    { id:12, name:'Dusk',   color:'Terracotta', hex:'#C96A4A', print:'Сумерки'    },
+  ]
+
+  function hexToRgba(hex, a) {
+    const r = parseInt(hex.slice(1,3),16)
+    const g = parseInt(hex.slice(3,5),16)
+    const b = parseInt(hex.slice(5,7),16)
+    return `rgba(${r},${g},${b},${a})`
+  }
+
+  function tshirtSVG(fill) {
+    return `<svg width="130" height="130" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="product-card__tshirt">
+      <path d="M 32 16 C 37 8 63 8 68 16 L 88 26 L 99 50 L 82 55 L 82 88 L 18 88 L 18 55 L 1 50 L 12 26 Z"
+        fill="${fill}" fill-opacity="0.82" stroke="rgba(74,59,47,0.12)" stroke-width="0.8"/>
+    </svg>`
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById('products-grid')
+    grid.innerHTML = products.map(p => {
+      const bg = p.hex === '#F3EFE6' ? '#DDD9CF' : hexToRgba(p.hex, 0.12)
+      return `
+        <div class="product-card">
+          <div class="product-card__image" style="background-color:${bg}">
+            ${tshirtSVG(p.hex)}
+            <div class="product-card__overlay">
+              <span class="product-card__qv">Смотреть</span>
+            </div>
+          </div>
+          <p class="product-card__collection">Forest Collection</p>
+          <h3 class="product-card__name">${p.name}</h3>
+          <p class="product-card__print">${p.print}</p>
+          <p class="product-card__price">4 900 ₽</p>
+        </div>`
+    }).join('')
+  }
+
+  // ── Header scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 60)
+  }, { passive: true })
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) } })
+  }, { threshold: 0.12 })
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+  // ── Subscribe ──
+  function handleSubscribe(e) {
+    e.preventDefault()
+    const form = e.target
+    form.innerHTML = '<p style="font-family:var(--font-serif);font-size:22px;font-style:italic;color:var(--olive);padding:12px 0">Спасибо — будем на связи.</p>'
+  }
+
+  renderProducts()
+</script>
+</body>
+</html>
