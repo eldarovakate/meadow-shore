@@ -1,7 +1,7 @@
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const items = [
-  { label: 'Ткань крупно', bg: '#4A3B2F',   textColor: 'rgba(243,239,230,0.45)' },
+  { label: 'Ткань крупно', bg: '#4A3B2F',   textColor: 'rgba(243,239,230,0.45)', img: '/images/forest-silence.png' },
   { label: 'Принт',        bg: '#6F7B52',   textColor: 'rgba(243,239,230,0.45)' },
   { label: 'Ветви',        bg: '#2c3a22',   textColor: 'rgba(243,239,230,0.35)' },
   { label: 'Лес',          bg: '#C96A4A',   textColor: 'rgba(243,239,230,0.45)' },
@@ -24,14 +24,21 @@ export default function AtmosphereGallery() {
             <div key={i} className="gallery__item">
               <div
                 className="gallery__placeholder"
-                style={{ backgroundColor: item.bg }}
+                style={{
+                  backgroundColor: item.bg,
+                  backgroundImage: item.img ? `url(${item.img})` : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
               >
-                <span
-                  className="gallery__placeholder-label"
-                  style={{ color: item.textColor }}
-                >
-                  {item.label}
-                </span>
+                {!item.img && (
+                  <span
+                    className="gallery__placeholder-label"
+                    style={{ color: item.textColor }}
+                  >
+                    {item.label}
+                  </span>
+                )}
               </div>
             </div>
           ))}
