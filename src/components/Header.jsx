@@ -15,7 +15,7 @@ export default function Header() {
       <div className="container">
         <div className="header__inner">
           <a href="#hero" className="header__logo">
-            <img src="/logo.png" alt="Meadow Shore" className="header__logo-img" />
+            <img src="/images/logo.png" alt="Meadow Shore" className="header__logo-img" />
           </a>
           <a href={`mailto:${brandInfo.email}`} className="header__email">
             {brandInfo.email}

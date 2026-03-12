@@ -13,11 +13,10 @@ export default function ProductGrid() {
             <span className="eyebrow">Forest Collection</span>
             <h2 className="products__title">Все модели</h2>
           </div>
-          <button className="btn">Все товары</button>
         </div>
 
         <div className="products__grid">
-          {products.map((product) => (
+          {products.slice(0, 4).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

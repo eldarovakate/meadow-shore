@@ -23,7 +23,6 @@ export default function ProductCard({ product }) {
       </div>
       <p className="product-card__collection">{product.collection}</p>
       <h3 className="product-card__name">{product.name}</h3>
-      <p className="product-card__print">{product.print}</p>
       <p className="product-card__price">{product.price}</p>
     </div>
   )
